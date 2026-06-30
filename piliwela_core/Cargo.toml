@@ -1,0 +1,8 @@
+[package]
+name = "piliwela_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies] 
+phf = { version = "0.11", features = ["macros"] } 
+unicode-normalization = "0.1"
