@@ -8,7 +8,7 @@ fn test_detect_fm() {
     assert_eq!(
         detector::detect("wWu fla"),
         FontFamily::FM,
-    );
+    ); 
 }
 
 #[test]
