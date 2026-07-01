@@ -1,6 +1,8 @@
 pub mod rules;
 pub mod matcher;
 pub mod english;
+pub mod script;
+mod english_words;
 pub mod kombuva;
 pub mod tokenizer;
 
@@ -19,19 +21,6 @@ use crate::options::{
 
 pub fn convert(text: &str, mapping: &MappingSet, options: &ConvertOptions) -> String {
     match options.english_policy {
-        EnglishPolicy::Never => {
-            // ========Convert Everything=========
-            let text = rules::apply_rules(
-                text,
-                mapping,
-            );
-
-            return matcher::apply_combos_and_singles(
-                &text,
-                mapping,
-            );
-        }
-
         EnglishPolicy::Auto => {
             let tokens =
                 tokenizer::tokenize(
@@ -48,18 +37,18 @@ pub fn convert(text: &str, mapping: &MappingSet, options: &ConvertOptions) -> St
                     }
 
                     tokenizer::Token::Word(word) => {
-                        if english::should_preserve(
+                        if script::should_convert(
                             word,
                         ) {
-                            result.push_str(
-                                word,
-                            );
-                        } else {
                             result.push_str(
                                 &convert_text(
                                     word,
                                     mapping,
                                 ),
+                            );
+                        } else {
+                            result.push_str(
+                                word,
                             );
                         }
                     }
@@ -108,13 +97,17 @@ pub fn convert(text: &str, mapping: &MappingSet, options: &ConvertOptions) -> St
 
             result
         }
+
+        EnglishPolicy::Never => {
+            return convert_text(
+            text,
+            mapping,
+        );
+}
     }
 }
 
-fn convert_text(
-    text: &str,
-    mapping: &MappingSet,
-) -> String {
+fn convert_text(text: &str, mapping: &MappingSet,) -> String {
     let text =
         rules::apply_rules(
             text,

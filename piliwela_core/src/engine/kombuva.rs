@@ -1,86 +1,37 @@
 // src/engine/kombuva.rs
 
-const PRE_BASE_VOWELS: [char; 4] = [
-    'ෙ', // kombuva
-    'ො',
-    'ෝ',
-    'ෞ',
-];
+/*
+    Handles post-processing for Sinhala
+    pre-base vowels (kombuva).
 
-fn is_pre_base_vowel(c: char) -> bool {
-    PRE_BASE_VOWELS.contains(&c)
-}
+    What:
+        Placeholder for future kombuva
+        corrections.
 
-fn is_sinhala_consonant(c: char) -> bool {
-    matches!(
-        c as u32,
-        0x0D9A..=0x0DC6
-    )
-}
+    Why:
+        Most FM kombuva sequences are already
+        handled directly by FM_COMBOS.
 
-fn is_sign(c: char) -> bool {
-    matches!(
-        c,
-        '්'
-            | 'ා'
-            | 'ැ'
-            | 'ෑ'
-            | 'ි'
-            | 'ී'
-            | 'ු'
-            | 'ූ'
-            | 'ෘ'
-            | 'ෲ'
-            | 'ෟ'
-            | 'ං'
-            | 'ඃ'
-    )
-}
+        Keeping this stage allows future
+        support for:
+            - malformed legacy text
+            - OCR output
+            - incomplete mappings
+            - other legacy fonts.
 
-pub fn fix_kombuva(text: &str) -> String {
-    let chars: Vec<char> =
-        text.chars().collect();
+    Used by:
+        engine::convert_text()
 
-    let mut result =
-        String::with_capacity(text.len());
+    Flow:
 
-    let mut i = 0;
-
-    while i < chars.len() {
-        let c = chars[i];
-
-        if is_pre_base_vowel(c)
-            && i + 1 < chars.len()
-        {
-            let mut j = i + 1;
-
-            while j < chars.len()
-                && is_sign(chars[j])
-            {
-                j += 1;
-            }
-
-            if j < chars.len()
-                && is_sinhala_consonant(
-                    chars[j],
-                )
-            {
-                result.push(chars[j]);
-
-                for k in i + 1..j {
-                    result.push(chars[k]);
-                }
-
-                result.push(c);
-
-                i = j + 1;
-                continue;
-            }
-        }
-
-        result.push(c);
-        i += 1;
-    }
-
-    result
+        matcher
+            ↓
+        fix_kombuva()
+            ↓
+        normalizer
+*/
+pub fn fix_kombuva(
+    text: &str,
+) -> String {
+    text.to_string()
 }
