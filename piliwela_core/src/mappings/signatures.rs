@@ -4,6 +4,7 @@ pub const FM_SIGNATURES: &[char] = &[
     'ø', '÷', '[', '{',
 ];
 
+/*
 pub const DL_SIGNATURES: &[char] = &[
     // fill later
 ];
@@ -15,3 +16,4 @@ pub const WIJEYA_SIGNATURES: &[char] = &[
 pub const KAPUTA_SIGNATURES: &[char] = &[
     // fill later
 ];
+*/

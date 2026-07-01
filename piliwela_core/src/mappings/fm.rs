@@ -2,6 +2,12 @@ use phf::phf_map;
 use crate::engine::MappingSet;
 
 pub static FM_SINGLES: phf::Map<char, &'static str> = phf_map! {
+    // Font-specific glyphs observed in real documents:
+    //   '¥' renders as the dialect word "දූ" (daughter) in FMAbhaya.
+    //   '»' renders as a Roman-numeral section marker "I" in FMEmaneex
+    //       (e.g. "»» fldgi" -> "II කොටස" / Part II).
+    '¥' => "දූ",
+    '»' => "I",
     'w' => "අ",
     'b' => "ඉ",
     'B' => "ඊ",
@@ -217,7 +223,7 @@ pub static FM_COMBOS: phf::Map<&'static str, &'static str> = phf_map!{
     "`G" => "ට්‍ඨ",
     "%s" => "්‍රි",
     "%S" => "්‍රී",
-    " ’" => "ී",
+    " ’" =>  "ී",
     " ‘" => "ි",
     "DD" => "ෲ",
     "ff" => "ෛ",
@@ -1166,10 +1172,13 @@ pub static FM_RULES: phf::Map<&'static str, &'static str> = phf_map!{
     "S%"=> "%S"
 };
 
-pub static FM_MAPPING: MappingSet = MappingSet{
+pub const FM_MAX_COMBO_LEN: usize = 8;
+pub const FM_MAX_RULE_LEN: usize = 2;
+
+pub static FM_MAPPING: MappingSet = MappingSet {
     singles: &FM_SINGLES,
     combos: &FM_COMBOS,
     rules: &FM_RULES,
-    max_combo_len: 6,
-    max_rule_len: 2,
+    max_combo_len: FM_MAX_COMBO_LEN,
+    max_rule_len: FM_MAX_RULE_LEN,
 };
