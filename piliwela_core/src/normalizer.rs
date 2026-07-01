@@ -1,8 +1,25 @@
-// src/normalizer.rs
-
 use unicode_normalization::
     UnicodeNormalization;
 
+/*
+    Removes consecutive Zero Width Joiners.
+
+    What:
+        Converts:
+
+            ‍‍
+        into:
+
+            ‍
+
+    Why:
+        Some legacy conversions can
+        accidentally generate duplicate
+        ZWJs.
+
+    Used by:
+        normalize()
+*/
 fn remove_duplicate_zwj(
     text: &str,
 ) -> String {
@@ -26,6 +43,26 @@ fn remove_duplicate_zwj(
     result
 }
 
+/*
+    Removes consecutive Zero Width
+    Non-Joiners.
+
+    What:
+        Converts:
+
+            ‌‌
+        into:
+
+            ‌
+
+    Why:
+        OCR and malformed legacy text
+        can sometimes generate duplicate
+        ZWNJs.
+
+    Used by:
+        normalize()
+*/
 fn remove_duplicate_zwnj(
     text: &str,
 ) -> String {
@@ -49,6 +86,22 @@ fn remove_duplicate_zwnj(
     result
 }
 
+/*
+    Collapses repeated whitespace.
+
+    Example:
+
+        "abc     def"
+            ↓
+        "abc def"
+
+    Why:
+        PDF extraction and OCR often
+        introduce excessive spacing.
+
+    Used by:
+        normalize()
+*/
 fn collapse_whitespace(
     text: &str,
 ) -> String {
@@ -74,6 +127,26 @@ fn collapse_whitespace(
     result
 }
 
+/*
+    Final Unicode cleanup stage.
+
+    Flow:
+
+        duplicate ZWJ removal
+                ↓
+        duplicate ZWNJ removal
+                ↓
+        whitespace cleanup
+                ↓
+        Unicode NFC normalization
+
+    Why:
+        Ensures every conversion returns
+        stable, valid Unicode Sinhala.
+
+    Used by:
+        engine::convert_text()
+*/
 pub fn normalize(
     text: &str,
 ) -> String {
@@ -92,5 +165,7 @@ pub fn normalize(
             &text,
         );
 
-    text.nfc().collect()
+    text
+        .nfc()
+        .collect()
 }
